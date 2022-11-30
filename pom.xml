@@ -10,7 +10,6 @@
     </parent>
     <groupId>ru.investportfolio</groupId>
     <artifactId>Invest_Portfolio</artifactId>
-    <packaging>war</packaging>
     <version>0.0.1-SNAPSHOT</version>
     <name>Invest_Portfolio</name>
     <description>Invest_Portfolio</description>
