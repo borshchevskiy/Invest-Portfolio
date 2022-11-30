@@ -28,14 +28,14 @@ public class UserController {
     public String profile(@AuthenticationPrincipal User user,
                           Model model) {
         model.addAttribute("user", user);
-        return "/profile/profile";
+        return "profile/profile";
     }
 
     @GetMapping("/update")
     public String getProfileUpdate(@AuthenticationPrincipal User user,
                                    Model model) {
         model.addAttribute("user", user);
-        return "/profile/updateProfile";
+        return "profile/updateProfile";
     }
 
     @PostMapping("/update")
@@ -56,7 +56,7 @@ public class UserController {
     public String getPasswordUpdate(@AuthenticationPrincipal User user,
                                     Model model) {
         model.addAttribute("user", user);
-        return "/profile/updatePassword";
+        return "profile/updatePassword";
     }
 
     @PostMapping("/update/password")

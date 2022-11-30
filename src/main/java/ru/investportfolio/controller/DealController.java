@@ -44,7 +44,7 @@ public class DealController {
         model.addAttribute("securityNameAndTicker",
                 (ticker == null || securityName == null) ? "" : securityName + " (" + ticker + ")");
         model.addAttribute("dealType", dealType);
-        return "/deals/new-deal";
+        return "deals/new-deal";
     }
 
     @PostMapping("/portfolios/{id}/new-deal")
