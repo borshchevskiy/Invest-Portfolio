@@ -28,7 +28,8 @@ public class WebSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authz) -> authz
-                        .antMatchers("/", "/login", "/logout", "/registration", "/static/**", "/favicon.ico").permitAll()
+                        .antMatchers("/", "/login", "/logout", "/registration",
+                                "/static/**", "/public/**", "/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
