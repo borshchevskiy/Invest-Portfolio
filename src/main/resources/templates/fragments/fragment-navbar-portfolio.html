@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--Navbar portfolio page-->
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="font-size: 1.5rem">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">
+                <img src="/static/images/navbar/logo.png" alt="" height=80px width=80px/>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto my-auto ms-3">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" th:href="@{/profile}">Profile</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link active" th:href="@{/portfolios}">Portfolios</a>
+                    </li>
+                </ul>
+                <form class="d-flex my-auto ms-3 me-5" method="post" th:action="@{/logout}">
+                    <button class="link-button nav-link" type="submit">Logout</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+</div>
+
+</body>
+</html>

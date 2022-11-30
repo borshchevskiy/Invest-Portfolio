@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>Invest Portfolio</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/static/css/main.css"/>
+</head>
+<body>
+<div class="main-page-container">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-main :: navbar}"></div>
+    </header>
+    <div class="content">
+        <h1>Control and accounting of your investments</h1>
+        <ul>
+            <li>Add stock trades</li>
+            <li>Monitor your portfolio</li>
+            <li>Analyze revenue</li>
+        </ul>
+
+        <form class="start-button" th:action="@{/portfolios}">
+            <button type="submit" class="btn btn-light btn-lg">Start now!</button>
+        </form>
+
+    </div>
+    <div class="image">
+        <img class="main-page-image" src="/static/images/background/main-page-img.png" alt="">
+        <div class="image-text">
+            Image:
+            <a class="link-text-white" href="https://www.freepik.com">Designed by zaie / Freepik</a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

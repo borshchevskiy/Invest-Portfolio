@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <title>Portfolios</title>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/static/css/portfolios/portfolio.css"/>
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-portfolio :: navbar}"></div>
+    </header>
+    <div class="content">
+        <!--Portfolio deleted alert-->
+        <div th:if="${isDeleted == false}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p th:text="'Portfolio ' + ${deletedPortfolioName} + ' can\'t be deleted!'"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <h1 class="mb-3">Portfolio:</h1>
+        <table class="table table-bordered table-hover mb-3">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Total Value</th>
+                <th scope="col">Positions value</th>
+                <th scope="col">Cash</th>
+                <th scope="col">Profit/Loss</th>
+                <th scope="col">%</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:class="${portfolio.profitLoss.signum()} &gt; 0?
+             'table-success' : (${portfolio.profitLoss.signum()} &lt; 0? 'table-danger':'')">
+                <td th:text="${portfolio.name}"></td>
+                <td th:text="${portfolio.getTotalValue.doubleValue()}"></td>
+                <td th:text="${portfolio.getPositionsValue().doubleValue()}"></td>
+                <td th:text="${portfolio.cash}"></td>
+                <td th:text="${portfolio.profitLoss.doubleValue()}"></td>
+                <td th:text="${portfolio.profitLossPercentage} + '%'"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="mb-3" th:if="${portfolio.user.id == userId}">
+            <a th:href="@{{id}/new-deal(id=${portfolio.id})}" class="btn btn-primary btn-lg btn-custom">New deal</a>
+            <!-- Button triggers modal for add/remove cash-->
+            <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
+                    data-bs-target="#addOrRemoveCashModal">
+                Add/Remove cash
+            </button>
+            <!-- Modal for add/remove cash-->
+            <div class="modal fade" id="addOrRemoveCashModal" data-bs-backdrop="static" data-bs-keyboard="true"
+                 tabindex="-1"
+                 aria-labelledby="addOrRemoveCashModal"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addOrRemoveCashLabel">Add/Remove cash</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{{id}/cash(id=${portfolio.id})}" method="post">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="cash" class="col-form-label">Cash amount:</label>
+                                    <input type="number" step="any" class="form-control" id="cash" name="cash">
+                                </div>
+                                <div th:if="${cashErrors}">
+                                    <p th:each="error : ${cashErrors}" th:text="${error}">Error message</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-success" name="cashAction" value="add">Add</button>
+                                <button type="submit" class="btn btn-danger" name="cashAction" value="remove">Remove
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Button triggers modal for update-->
+            <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
+                    data-bs-target="#updatePortfolioModal">
+                Change portfolio name
+            </button>
+            <!-- Modal for Update-->
+            <div class="modal fade" id="updatePortfolioModal" data-bs-backdrop="static" data-bs-keyboard="true"
+                 tabindex="-1"
+                 aria-labelledby="updatePortfolioModal"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="updatePortfolioLabel">Change portfolio name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/portfolios/{id}/update(id=${portfolio.id})}" method="post">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="portfolio-name" class="col-form-label">New portfolio name:</label>
+                                    <input type="text" class="form-control" id="portfolio-name" name="name">
+                                </div>
+                                <div th:if="${updateErrors}">
+                                    <p th:each="error : ${updateErrors}" th:text="${error}">Error message</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Button triggers modal for delete-->
+            <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
+                    data-bs-target="#deletePortfolioModal">
+                Delete portfolio
+            </button>
+            <!-- Modal for delete-->
+            <div class="modal fade" id="deletePortfolioModal" data-bs-backdrop="static" data-bs-keyboard="true"
+                 tabindex="-1"
+                 aria-labelledby="deletePortfolioModal"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deletePortfolioLabel">Delete portfolio</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{/portfolios/{id}/delete(id=${portfolio.id})}" method="post">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <input type="hidden" name="name" th:value="${portfolio.name}"/>
+                                    <p th:text="'Are you sure want to delete portfolio ' + ${portfolio.name} + '?'">
+                                        Warning
+                                        text</p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Delete</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <br>
+        </div>
+        <h2>Positions:</h2>
+        <table class="table table-bordered table-hover mb-3">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Ticker</th>
+                <th scope="col">Position</th>
+                <th scope="col">Acquisition price</th>
+                <th scope="col">Current Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Acquisition value</th>
+                <th scope="col">Liquidation Value</th>
+                <th scope="col">Profit/Loss</th>
+                <th scope="col">%</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            <tbody class="align-middle">
+            <tr th:each="position:${portfolio.positions}" th:class="${position.profitLoss.signum()} &gt; 0?
+             'table-success' : (${position.profitLoss.signum()} &lt; 0? 'table-danger':'')">
+                <td th:text="${position.securityName}"></td>
+                <td th:text="${position.ticker}"></td>
+                <td th:text="${position.positionType}"></td>
+                <td th:text="${position.acquisitionPrice.doubleValue()}"></td>
+                <td th:text="${position.currentPrice}"></td>
+                <td th:text="${position.quantity}"></td>
+                <td th:text="${position.totalAcquisitionValue}"></td>
+                <td th:text="${position.liquidationValue}"></td>
+                <td th:text="${position.profitLoss}"></td>
+                <td th:text="${position.profitLossPercentage} + '%'"></td>
+                <td class="row g-1 m-0">
+                    <form class="col m-0" th:action="@{{id}/new-deal(id=${portfolio.id})}" method="get">
+                        <input type="hidden" name="ticker" th:value="${position.ticker}">
+                        <input type="hidden" name="securityName" th:value="${position.securityName}">
+                        <input type="hidden" name="dealType" th:value="'buy'">
+                        <button type="submit" class="btn btn-success btn-sm"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Buy more">Buy
+                        </button>
+                    </form>
+                    <form class="col m-0" th:action="@{{id}/new-deal(id=${portfolio.id})}" method="get">
+                        <input type="hidden" name="ticker" th:value="${position.ticker}">
+                        <input type="hidden" name="securityName" th:value="${position.securityName}">
+                        <input type="hidden" name="dealType" th:value="'sell'">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sell">Sell
+                        </button>
+                    </form>
+                    <form class="col m-0" th:action="@{{id}/delete-position(id=${portfolio.id})}" method="post">
+                        <button type="submit" class="btn btn-secondary btn-sm" name="positionId"
+                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                data-bs-title="Remove position (This action does not sell stocks)"
+                                th:value="${position.id}">Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <script>const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))</script>
+        <div th:if="${updareErrors}">
+            <script type="text/javascript">
+                const modal = new bootstrap.Modal('#updatePortfolioModal');
+                modal.show();
+            </script>
+        </div>
+        <div th:if="${cashErrors}">
+            <script type="text/javascript">
+                const modal = new bootstrap.Modal('#addOrRemoveCashModal');
+                modal.show();
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Profile</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/css/user/profile/profile.css"/>
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-profile :: navbar}"></div>
+    </header>
+    <div class="content">
+        <h1 class="mb-3">Update profile</h1>
+        <h5 class="mb-3">Fields marked with * can not be blank.</h5>
+        <form th:action="@{/templates/profile/update}" method="post" th:object="${user}">
+            <div class="mb-3">
+                <label class="form-label" for="email">*Email:
+                    <div>
+                        <input class="form-control" id="email" type="email" name="email"
+                               placeholder="example@example.com" th:value="*{email}"/>
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="firstname">Firstname
+                    <div>
+                        <input class="form-control" id="firstName" type="text" name="firstname" placeholder="Firstname"
+                               th:value="*{firstname}">
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="lastName">Lastname
+                    <div>
+                        <input class="form-control" id="lastName" type="text" name="lastname" placeholder="Lastname"
+                               th:value="*{lastname}">
+                    </div>
+                </label>
+            </div>
+            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-4" type="submit">Update</button>
+        </form>
+        <div class="mb-3" th:if="${errors}">
+            <p th:each="error : ${errors}" th:text="${error}">Error message</p>
+        </div>
+        <div>
+            <a th:href="@{/profile}">Back to profile</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

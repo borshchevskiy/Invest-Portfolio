@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url:
+    username: test
+    password: test
+
+  jpa:
+    properties.hibernate:
+      show_sql: true
+      format_sql: true
+      hbm2ddl.auto: validate
+    open-in-view: false
+
+  liquibase:
+    enabled: true
+    contexts: test
+    change-log: classpath:db/changelog/db.changelog-test-master.yaml

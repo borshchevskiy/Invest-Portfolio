@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Profile</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/css/user/profile/profile.css"/>
+</head>
+<body>
+<div class="page-container" th:object="${user}">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-profile :: navbar}"></div>
+    </header>
+    <div class="content">
+        <p class="mb-3" th:text="'Email: ' + *{email}">Email</p>
+        <p class="mb-3" th:text="'Firstname: ' + *{firstname}">Firstname</p>
+        <p class="mb-3" th:text="'Lastname: ' + *{lastname}">Lastname</p>
+        <div class="mb-3"><a th:href="@{/profile/update}">Update profile</a></div>
+        <div class="mb-3"><a th:href="@{/profile/update/password}">Change Password</a></div>
+    </div>
+</div>
+</body>
+</html>

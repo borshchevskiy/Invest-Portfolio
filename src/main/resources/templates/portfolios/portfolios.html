@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Portfolios</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/static/css/portfolios/portfolios.css"/>
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-portfolio :: navbar}"></div>
+    </header>
+    <div class="content">
+        <!--Portfolio deleted alert-->
+        <div th:if="${isDeleted == true}">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <p th:text="'Portfolio ' + ${deletedPortfolioName} + ' was deleted!'"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <!--Alert for negative cash on creation-->
+        <div th:if="${cashErrors}">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <p th:text="${cashErrors}">Error message</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+        <h1 class="mb-3">Portfolios:</h1>
+        <!--No portfolios alert-->
+        <div th:if="${portfolios.isEmpty()}">
+            <span>You don't have any portfolios!</span>
+        </div>
+        <!--Portfolios list-->
+        <table class="table table-bordered table-hover" th:unless="${portfolios.isEmpty()}">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+                <th scope="col">Profit/Loss</th>
+                <th scope="col">%</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:class="${portfolio.profitLoss.signum()} &gt; 0?
+             'table-success' : (${portfolio.profitLoss.signum()} &lt; 0? 'table-danger':'')"
+                th:each="portfolio : ${portfolios}">
+                <td><a th:href="@{/portfolios/{id}(id=${portfolio.id})}"
+                       th:text="${portfolio.name}">Portfolio name</a></td>
+                <td th:text="${portfolio.getTotalValue.doubleValue()}"></td>
+                <td th:text="${portfolio.profitLoss.doubleValue()}"></td>
+                <td th:text="${portfolio.profitLossPercentage}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <!-- Button triggers modal -->
+        <button type="button" class="btn btn-primary btn-lg btn-custom mb-3" data-bs-toggle="modal" data-bs-target="#createPortfolioModal">
+            Create new portfolio
+        </button>
+        <!-- Modal to create portfolio-->
+        <div class="modal fade" id="createPortfolioModal" data-bs-backdrop="static" data-bs-keyboard="true"
+             tabindex="-1"
+             aria-labelledby="createPortfolioLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createPortfolioLabel">Create portfolio</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form th:action="@{/portfolios/create}" method="post">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="portfolio-name" class="col-form-label">Portfolio name:</label>
+                                <input type="text" class="form-control" id="portfolio-name" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cash" class="col-form-label">Cash:</label>
+                                <input type="number" step="any" class="form-control" id="cash" name="cash" value="0">
+                                <input type="hidden" name="cashAction" value="add">
+                            </div>
+                            <div th:if="${createErrors}">
+                                <p th:each="error : ${createErrors}" th:text="${error}">Error message</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary btn-custom">Create</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!--Modal auto-toggle if response has error-->
+        <div th:if="${createErrors}">
+            <script type="text/javascript">
+                const modal = new bootstrap.Modal('#createPortfolioModal');
+                modal.show();
+            </script>
+        </div>
+    </div>
+</div>
+</body>
+</html>

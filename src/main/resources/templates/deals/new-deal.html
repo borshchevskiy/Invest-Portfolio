@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Deal</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/static/css/deals/new-deal.css"/>
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar-header">
+        <th:block th:insert="~{fragments/fragment-navbar-deal :: navbar}"></th:block>
+    </header>
+    <div class="content">
+        <div th:if="${errors}">
+            <p th:each="error : ${errors}" th:text="${error}">Error message</p>
+        </div>
+        <h2 class="mb-3">New Deal:</h2>
+        <form class="col-4" th:action="@{/portfolios/{id}/new-deal(id=${portfolioId})}" method="post">
+            <div>
+                <input type="hidden" name="portfolioId" th:value="${portfolioId}">
+            </div>
+            <div class="mb-3">
+                <label for="securityName" class="form-label">Security name and ticker</label>
+                <input type="text" class="form-control" list="nameOptions" id="securityName"
+                       name="securityNameAndTicker"
+                       th:value="${securityNameAndTicker}?: ' '" placeholder="Type to search...">
+                <datalist id="nameOptions">
+                    <th:block th:each="name:${names}" th:name="names" th:object="${names}">
+                        <option th:value="${name}">
+                    </th:block>
+                </datalist>
+            </div>
+            <div class="mb-3">
+                <label for="dealType" class="form-label">Select deal type</label>
+                <select class="form-control" id="dealType" name="dealType" required>
+                    <option th:selected="${dealType eq 'buy'}" value="buy">Buy</option>
+                    <option th:selected="${dealType eq 'sell'}" value="sell">Sell</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="acquisitionPrice" class="form-label">Price</label>
+                <input class="form-control" type="number" step="any" id="acquisitionPrice" name="acquisitionPrice"
+                       onchange="acqValue()" required>
+            </div>
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity</label>
+                <input class="form-control" type="number" step="1" id="quantity" name="quantity" onchange="acqValue()"
+                       required>
+            </div>
+            <div class="mb-3">
+                <label for="acquisitionValue" class="form-label">Acquisition value</label>
+                <input class="form-control" type="number" step="any" id="acquisitionValue" name="acquisitionValue"
+                       disabled>
+            </div>
+            <div class="mb-4">
+                <label for="date" class="form-label">Date</label>
+                <input class="form-control" type="date" id="date" name="date">
+            </div>
+            <div class="form-check form-switch mb-4">
+                <label class="form-check-label" for="hasCommission">Toggle to add/remove commissions</label>
+                <input class="form-check-input" type="checkbox" id="hasCommission" name="hasCommission"
+                       value="hasCommission"
+                       data-bs-toggle="collapse" data-bs-target="#collapseCommissionForm"
+                       aria-expanded="false" aria-controls="collapseCommissionForm">
+            </div>
+            <div class="collapse" id="collapseCommissionForm">
+                <!--Market commission-->
+                <p class="mb-1">Market commission</p>
+                <div class="mb-3 p-3 border rounded">
+                    <div class="form-check">
+                        <label class="form-check-label" for="defaultMarketCommission">
+                            Default market commission
+                        </label>
+                        <input class="form-check-input" type="radio" name="marketCommissionType"
+                               id="defaultMarketCommission"
+                               value="default" onchange="deActivateCustomMarketCommission()" checked>
+                        <div class="input-group">
+                            <label for="defaultMarketCommissionRate"></label>
+                            <input class="form-control" type="text" value="0,01% of deal volume"
+                                   id="defaultMarketCommissionRate"
+                                   readonly>
+                            <label for="defaultMarketCommissionValue"></label>
+                            <input class="form-control" type="number" step="any"
+                                   id="defaultMarketCommissionValue" readonly>
+                        </div>
+                        <div id="defaultMarketCommissionHelp" class="form-text mb-3">
+                            Minimum commission is &#8381;0.02
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <label class="form-check-label" for="customMarketCommission">
+                            Custom market commission
+                        </label>
+                        <input class="form-check-input" type="radio" name="marketCommissionType"
+                               id="customMarketCommission"
+                               value="custom" onchange="activateCustomMarketCommission()">
+                        <div class="input-group">
+                            <label for="marketCommissionValue"></label>
+                            <input class="form-control" type="number" name="marketCommission" id="marketCommissionValue"
+                                   disabled>
+                        </div>
+                    </div>
+                </div>
+                <!--Broker commission-->
+                <div class="mb-3">
+                    <label for="brokerCommissionValue">Broker commission</label>
+                    <input class="form-control" type="number" step="0.01" name="brokerCommission"
+                           id="brokerCommissionValue">
+                </div>
+                <!--    Other commission-->
+                <div class="mb-3">
+                    <label for="otherCommissionValue">Other commission</label>
+                    <input class="form-control" type="number" name="otherCommission" id="otherCommissionValue">
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="comment" class="form-label">Comment</label>
+                <textarea class="form-control" id="comment" name="comment" rows="2"></textarea>
+            </div>
+            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-3" type="submit">Add deal</button>
+        </form>
+    </div>
+
+    <script>
+        function acqValue() {
+            let price = parseFloat(document.getElementById("acquisitionPrice").value);
+            let quantity = parseFloat(document.getElementById("quantity").value);
+            let value = price * quantity;
+            document.getElementById("acquisitionValue").value = value;
+            let commission = (value * 0.01 * 0.01).toFixed(2);
+            document.getElementById("defaultMarketCommissionValue").value = commission < 0.02 ? 0.02 : commission;
+        }
+    </script>
+    <script>
+        function activateCustomMarketCommission() {
+            document.getElementById("marketCommissionValue").removeAttribute("disabled")
+            document.getElementById("defaultMarketCommissionRate").setAttribute("disabled", "")
+            document.getElementById("defaultMarketCommissionValue").setAttribute("disabled", "")
+
+        }
+    </script>
+    <script>
+        function deActivateCustomMarketCommission() {
+            document.getElementById("marketCommissionValue").setAttribute("disabled", "")
+            document.getElementById("defaultMarketCommissionRate").removeAttribute("disabled")
+            document.getElementById("defaultMarketCommissionValue").removeAttribute("disabled")
+        }
+    </script>
+</div>
+</body>
+</html>

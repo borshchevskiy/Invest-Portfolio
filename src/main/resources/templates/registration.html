@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Registration</title>
+    <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
+    <link rel="stylesheet" type="text/css" href="/static/css/registration.css"/>
+</head>
+<body>
+<div class="page-container">
+    <header class="navbar-header">
+        <div th:insert="~{fragments/fragment-navbar-login :: navbar-empty}"></div>
+    </header>
+    <div class="content">
+        <h1 class="mb-3">Registration</h1>
+        <h5 class="mb-2">Fields marked with * are mandatory.</h5>
+        <form th:action="@{/registration}" method="post" th:object="${user}">
+            <div class="mb-3">
+                <label class="form-label" for="email">*Email:
+                    <div>
+                        <input class="form-control-lg" id="email" type="email" name="email" placeholder="example@example.com" th:value="*{email}" required/>
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="password">*Password:
+                    <div>
+                        <input class="form-control-lg" id="password" type="password" name="password" placeholder="********" required/>
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="passwordConfirm">*Confirm password:
+                    <div>
+                        <input class="form-control-lg" id="passwordConfirm" type="password" name="passwordConfirm" placeholder="********" required/>
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="firstname">Firstname
+                    <div>
+                        <input class="form-control-lg" id="firstName" type="text" name="firstname" placeholder="Ivan" th:value="*{firstname}">
+                    </div>
+                </label>
+            </div>
+            <div class="mb-3">
+                <label class="form-label" for="lastName">Lastname
+                    <div>
+                        <input class="form-control-lg" id="lastName" type="text" name="lastname" placeholder="Ivanov" th:value="*{lastname}">
+                    </div>
+                </label>
+            </div>
+            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-4" type="submit">Register</button>
+        </form>
+        <div th:if="${errors}">
+            <p th:each="error : ${errors}" th:text="${error}">Error message</p>
+        </div>
+        <div class="mb-2">
+            <p>Already registered? <a th:href="@{/login}">Login!</a></p>
+        </div>
+        <div class="mb-2">
+            <a th:href="@{/}">Back to main page</a>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
