@@ -54,6 +54,7 @@ public class UserService implements UserDetailsService {
             return false;
         }
         userRepository.save(userCreateMapper.map(userCreateDTO));
+
         return true;
     }
 

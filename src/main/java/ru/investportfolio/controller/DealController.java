@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.investportfolio.controller.utils.ControllerUtils;
+import ru.investportfolio.controller.util.ControllerUtil;
 import ru.investportfolio.database.entity.Deal;
 import ru.investportfolio.dto.CashEditDTO;
 import ru.investportfolio.dto.DealCreateDTO;
@@ -40,10 +40,12 @@ public class DealController {
                           @RequestParam(value = "securityName", required = false) String securityName,
                           @RequestParam(value = "dealType", required = false) String dealType,
                           Model model) {
+
         model.addAttribute("portfolioId", portfolioId);
         model.addAttribute("securityNameAndTicker",
                 (ticker == null || securityName == null) ? "" : securityName + " (" + ticker + ")");
         model.addAttribute("dealType", dealType);
+
         return "deals/new-deal";
     }
 
@@ -62,7 +64,7 @@ public class DealController {
             if (!contains) {
                 errors.add("Can't find security with specified name. Please, choose from suggested list!");
             }
-            errors.addAll(ControllerUtils.gerErrorsList(bindingResult));
+            errors.addAll(ControllerUtil.gerErrorsMessages(bindingResult));
             redirectAttributes.addFlashAttribute("errors", errors);
 
             return "redirect:/portfolios/{id}/new-deal";
@@ -83,16 +85,19 @@ public class DealController {
         positionService.addDeal(deal);
         CashEditDTO cashEditDTO = dealService.defineCashAmountInDeal(deal);
         portfolioService.updateCash(portfolioId, cashEditDTO);
+
         return "redirect:/portfolios/{id}";
     }
 
     @ModelAttribute("names")
-    public List<String> getShareNamesAndTickers() {
+    private List<String> getShareNamesAndTickers() {
         List<String> names = new ArrayList<>(shareService.getShareDatalist()
                 .stream()
                 .map(ShareDatalistDTO::toString)
                 .toList());
+
         names.sort(naturalOrder());
+
         return names;
     }
 }

@@ -3,14 +3,7 @@ package ru.investportfolio.dto.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.investportfolio.database.entity.Deal;
-import ru.investportfolio.database.entity.DealType;
-import ru.investportfolio.database.entity.Portfolio;
-import ru.investportfolio.database.repository.PortfolioRepository;
 import ru.investportfolio.dto.DealCreateDTO;
-import ru.investportfolio.exception.ItemNotFoundException;
-
-import java.math.BigDecimal;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor

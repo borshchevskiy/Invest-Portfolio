@@ -6,6 +6,7 @@ import ru.investportfolio.dto.ShareDatalistDTO;
 
 @Component
 public class ShareDatalistMapper implements Mapper<Share, ShareDatalistDTO> {
+
     @Override
     public ShareDatalistDTO map(Share object) {
         ShareDatalistDTO dto = new ShareDatalistDTO();

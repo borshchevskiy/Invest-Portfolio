@@ -2,10 +2,11 @@ package ru.investportfolio.dto;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.validation.annotation.Validated;
 import ru.investportfolio.database.entity.CashAction;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @Setter

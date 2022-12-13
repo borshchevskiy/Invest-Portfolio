@@ -14,7 +14,10 @@ import ru.investportfolio.exception.ItemNotFoundException;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -38,9 +41,11 @@ public class PortfolioService {
         updatePositionsResults(portfolio);
         sortPositions(portfolio);
         updatePortfolioValues(portfolio);
+
         BigDecimal acquisitionValue = portfolio.getPositions().stream()
                 .map(Position::getAcquisitionValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         if (portfolio.getProfitLoss().equals(BigDecimal.ZERO)) {
             portfolio.setProfitLossPercentage(0d);
         } else {
@@ -65,13 +70,15 @@ public class PortfolioService {
         BigDecimal positionsValue = portfolio.getPositions().stream()
                 .map(Position::getLiquidationValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        portfolio.setPositionsValue(positionsValue);
-        portfolio.setTotalValue(portfolio.getPositionsValue()
-                .add(portfolio.getCash()));
+
         BigDecimal acquisitionValue = portfolio.getPositions().stream()
                 .map(Position::getAcquisitionValue)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+
         BigDecimal profitLoss = positionsValue.subtract(acquisitionValue);
+
+        portfolio.setPositionsValue(positionsValue);
+        portfolio.setTotalValue(portfolio.getPositionsValue().add(portfolio.getCash()));
         portfolio.setProfitLoss(profitLoss);
     }
 

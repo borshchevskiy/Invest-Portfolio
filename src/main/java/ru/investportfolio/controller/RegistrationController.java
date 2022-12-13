@@ -8,7 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.investportfolio.controller.utils.ControllerUtils;
+import ru.investportfolio.controller.util.ControllerUtil;
 import ru.investportfolio.database.entity.User;
 import ru.investportfolio.dto.UserCreateDTO;
 import ru.investportfolio.service.UserService;
@@ -24,8 +24,7 @@ public class RegistrationController {
     private final UserService userService;
 
     @GetMapping
-    public String getRegistration(User user,
-                                  Model model) {
+    public String getRegistration(User user, Model model) {
         model.addAttribute("user", user);
         return "registration";
     }
@@ -46,17 +45,17 @@ public class RegistrationController {
             errors.add("Passwords are different!");
         }
         if (isConfirmationEmpty || bindingResult.hasErrors()) {
-            errors.addAll(ControllerUtils.gerErrorsList(bindingResult));
+            errors.addAll(ControllerUtil.gerErrorsMessages(bindingResult));
             redirectAttributes.addFlashAttribute("user", user);
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:/registration";
         }
-
-        if (!userService.create(user)){
+        if (!userService.create(user)) {
             redirectAttributes.addFlashAttribute("user", user);
             redirectAttributes.addFlashAttribute("errors", "User already exists!");
             return "redirect:/registration";
         }
+
         return "redirect:/login";
     }
 }

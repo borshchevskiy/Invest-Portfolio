@@ -3,7 +3,6 @@ package ru.investportfolio.dto;
 import lombok.Getter;
 import lombok.Setter;
 import ru.investportfolio.database.entity.DealType;
-import ru.investportfolio.database.entity.Portfolio;
 import ru.investportfolio.database.entity.Position;
 
 import javax.validation.constraints.NotBlank;
@@ -53,12 +52,12 @@ public class DealCreateDTO {
 
     private Position position;
 
-    public String getSecurityName(){
+    public String getSecurityName() {
         int tickerStartIndex = securityNameAndTicker.lastIndexOf('(');
         return securityNameAndTicker.substring(0, tickerStartIndex - 1);
     }
 
-    public String getTicker(){
+    public String getTicker() {
         int tickerStartIndex = securityNameAndTicker.lastIndexOf('(');
         return securityNameAndTicker.substring(tickerStartIndex + 1, securityNameAndTicker.length() - 1);
     }

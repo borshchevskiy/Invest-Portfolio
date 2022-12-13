@@ -8,7 +8,4 @@ import ru.investportfolio.database.entity.Share;
 public interface ShareRepository extends
         JpaRepository<Share, Long>,
         QueryShareRepository {
-
-
-
 }

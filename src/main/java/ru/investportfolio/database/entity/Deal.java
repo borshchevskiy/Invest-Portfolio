@@ -25,12 +25,14 @@ public class Deal {
     @Column(name = "ticker")
     private String ticker;
 
+    //Price of single share
     @Column(name = "acquisition_price")
     private BigDecimal acquisitionPrice;
 
     @Column(name = "quantity")
     private Long quantity;
 
+    //Value of all shares in deal = acquisitionPrice * quantity
     @Column(name = "acquisition_value")
     private BigDecimal acquisitionValue;
 
@@ -46,6 +48,7 @@ public class Deal {
     @Column(name = "other_commission")
     private BigDecimal otherCommission;
 
+    //Value of all shares in deal including all commissions
     @Column(name = "total_value")
     private BigDecimal totalAcquisitionValue;
 

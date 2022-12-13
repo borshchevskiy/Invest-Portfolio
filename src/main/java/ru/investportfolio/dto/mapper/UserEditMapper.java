@@ -1,7 +1,6 @@
 package ru.investportfolio.dto.mapper;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.investportfolio.database.entity.User;
 import ru.investportfolio.dto.UserEditDTO;
@@ -9,8 +8,6 @@ import ru.investportfolio.dto.UserEditDTO;
 @Component
 @RequiredArgsConstructor
 public class UserEditMapper implements Mapper<UserEditDTO, User> {
-
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public User map(UserEditDTO object) {
@@ -24,7 +21,6 @@ public class UserEditMapper implements Mapper<UserEditDTO, User> {
         copy(fromObject, toObject);
         return toObject;
     }
-
 
     private void copy(UserEditDTO object, User user) {
         user.setEmail(object.getEmail());

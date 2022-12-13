@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -23,24 +23,28 @@ public class ShareService {
     public List<Share> findAll() {
         return shareRepository.findAll();
     }
+
     public List<String> getTickersList() {
         return shareRepository.findAll()
                 .stream()
                 .map(Share::getTicker)
                 .collect(toList());
     }
+
     public List<String> getFullNamesList() {
         return shareRepository.findAll()
                 .stream()
                 .map(Share::getFullName)
                 .collect(toList());
     }
+
     public List<String> getShortNamesList() {
         return shareRepository.findAll()
                 .stream()
                 .map(Share::getShortName)
                 .collect(toList());
     }
+
     public Map<String, String> getShortNamesAndTickers() {
         return shareRepository.findAll()
                 .stream()
@@ -54,7 +58,7 @@ public class ShareService {
     }
 
     public List<ShareDatalistDTO> getShareDatalist() {
-        return  shareRepository.findAll()
+        return shareRepository.findAll()
                 .stream()
                 .map(shareDatalistMapper::map)
                 .collect(toList());

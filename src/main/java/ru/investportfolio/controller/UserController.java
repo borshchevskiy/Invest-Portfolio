@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.investportfolio.controller.utils.ControllerUtils;
+import ru.investportfolio.controller.util.ControllerUtil;
 import ru.investportfolio.database.entity.User;
 import ru.investportfolio.dto.UserEditDTO;
 import ru.investportfolio.service.UserService;
@@ -25,15 +25,13 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping()
-    public String profile(@AuthenticationPrincipal User user,
-                          Model model) {
+    public String profile(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "profile/profile";
     }
 
     @GetMapping("/update")
-    public String getProfileUpdate(@AuthenticationPrincipal User user,
-                                   Model model) {
+    public String getProfileUpdate(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "profile/updateProfile";
     }
@@ -43,18 +41,20 @@ public class UserController {
                                 BindingResult bindingResult,
                                 RedirectAttributes redirectAttributes,
                                 @AuthenticationPrincipal User user) {
+
         if (bindingResult.hasErrors()) {
-            List<String> errors = new ArrayList<>(ControllerUtils.gerErrorsList(bindingResult));
+            List<String> errors = new ArrayList<>(ControllerUtil.gerErrorsMessages(bindingResult));
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:/profile/update";
         }
+
         userService.update(user, userDTO);
+
         return "redirect:/profile";
     }
 
     @GetMapping("/update/password")
-    public String getPasswordUpdate(@AuthenticationPrincipal User user,
-                                    Model model) {
+    public String getPasswordUpdate(@AuthenticationPrincipal User user, Model model) {
         model.addAttribute("user", user);
         return "profile/updatePassword";
     }
@@ -64,6 +64,7 @@ public class UserController {
                                  @RequestParam("password") String password,
                                  @RequestParam("passwordConfirm") String passwordConfirm,
                                  RedirectAttributes redirectAttributes) {
+
         List<String> errors = new ArrayList<>();
         boolean isPasswordEmpty = !StringUtils.hasText(password);
         boolean isConfirmationEmpty = !StringUtils.hasText(passwordConfirm);
@@ -81,6 +82,7 @@ public class UserController {
         }
 
         userService.updatePassword(user, password);
+
         return "redirect:/profile";
     }
 

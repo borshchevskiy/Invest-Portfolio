@@ -2,7 +2,6 @@ package ru.investportfolio.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -26,14 +25,14 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/");
     }
 
-    public class StringToCashActionConverter implements Converter<String, CashAction> {
+    public static class StringToCashActionConverter implements Converter<String, CashAction> {
         @Override
         public CashAction convert(String source) {
             return CashAction.valueOf(source.toUpperCase());
         }
     }
 
-    public class StringToDealTypeConverter implements Converter<String, DealType> {
+    public static class StringToDealTypeConverter implements Converter<String, DealType> {
         @Override
         public DealType convert(String source) {
             return DealType.valueOf(source.toUpperCase());

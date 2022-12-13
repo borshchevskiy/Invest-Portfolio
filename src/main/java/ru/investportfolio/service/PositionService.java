@@ -3,7 +3,10 @@ package ru.investportfolio.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.investportfolio.database.entity.*;
+import ru.investportfolio.database.entity.Deal;
+import ru.investportfolio.database.entity.DealType;
+import ru.investportfolio.database.entity.Position;
+import ru.investportfolio.database.entity.PositionType;
 import ru.investportfolio.database.repository.PositionRepository;
 import ru.investportfolio.exception.ItemNotFoundException;
 
@@ -46,23 +49,16 @@ public class PositionService {
     @Transactional
     public void addDeal(Deal deal) {
         Position position = findById(deal.getPosition().getId());
+
         if (deal.getDealType() == DealType.BUY) {
             position.setQuantity(position.getQuantity() + deal.getQuantity());
-            position.setAcquisitionValue(
-                    position.getAcquisitionValue()
-                            .add(deal.getAcquisitionValue()));
-            position.setTotalAcquisitionValue(
-                    position.getTotalAcquisitionValue()
-                            .add(deal.getTotalAcquisitionValue()));
+            position.setAcquisitionValue(position.getAcquisitionValue().add(deal.getAcquisitionValue()));
+            position.setTotalAcquisitionValue(position.getTotalAcquisitionValue().add(deal.getTotalAcquisitionValue()));
         }
         if (deal.getDealType() == DealType.SELL) {
             position.setQuantity(position.getQuantity() - deal.getQuantity());
-            position.setAcquisitionValue(
-                    position.getAcquisitionValue()
-                            .subtract(deal.getAcquisitionValue()));
-            position.setTotalAcquisitionValue(
-                    position.getTotalAcquisitionValue()
-                            .subtract(deal.getTotalAcquisitionValue()));
+            position.setAcquisitionValue(position.getAcquisitionValue().subtract(deal.getAcquisitionValue()));
+            position.setTotalAcquisitionValue(position.getTotalAcquisitionValue().subtract(deal.getTotalAcquisitionValue()));
         }
         if (position.getQuantity().equals(0L)) {
             delete(position.getId());
@@ -70,21 +66,20 @@ public class PositionService {
         }
 
         position.setPositionType(position.getQuantity() > 0 ? PositionType.LONG : PositionType.SHORT);
+        position.setAcquisitionPrice(position.getAcquisitionValue().divide(BigDecimal.valueOf(position.getQuantity()),
+                RoundingMode.HALF_UP));
 
-        position.setAcquisitionPrice(
-                position.getAcquisitionValue()
-                        .divide(BigDecimal.valueOf(position.getQuantity()), RoundingMode.HALF_UP));
         positionRepository.save(position);
     }
 
     public void updateFinancialResult(Position position) {
         BigDecimal currentPrice = priceService.getSharePriceByTicker(position.getTicker());
         position.setCurrentPrice(currentPrice);
-        BigDecimal liquidationValue = position.getCurrentPrice()
-                .multiply(BigDecimal.valueOf(position.getQuantity()));
+
+        BigDecimal liquidationValue = position.getCurrentPrice().multiply(BigDecimal.valueOf(position.getQuantity()));
         position.setLiquidationValue(liquidationValue);
-        BigDecimal profitLoss = position.getLiquidationValue()
-                .subtract(position.getTotalAcquisitionValue());
+
+        BigDecimal profitLoss = position.getLiquidationValue().subtract(position.getTotalAcquisitionValue());
         position.setProfitLoss(profitLoss);
 
         if (profitLoss.equals(BigDecimal.ZERO)) {
@@ -94,9 +89,9 @@ public class PositionService {
                     position.getProfitLoss()
                             .divide(position.getTotalAcquisitionValue(), 4, RoundingMode.HALF_UP)
                             .multiply(BigDecimal.valueOf(100))
-                            .toPlainString());
+                            .toPlainString()
+            );
             position.setProfitLossPercentage(profitLossPercentage);
         }
     }
-
 }

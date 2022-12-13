@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.investportfolio.dto.SharesInfoUpdateDTO;
+import ru.investportfolio.exception.EmptyShareDataException;
 import ru.investportfolio.service.ShareService;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toSet;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -28,9 +31,12 @@ public class ShareListUpdater {
     /*
         This method retrieves all shares info from MOEX via iss query (see https://www.moex.com/a2193).
         Parameter - no parameters
-        Returns - the array of arrays with share's data. eg. response = [[share's data], [share's data] ... [share's data]].
-        Each [share's data] = [SECID(ticker), SHORTNAME(short company name), SECNAME(full company name),
-        ISIN(share identification number)].
+        Returns - the array of arrays with share data. eg. response = [[share data], [share data] ... [share data]].
+        [share data] = {SECID, SHORTNAME, SECNAME, ISIN}.
+        SECID - ticker;
+        SHORTNAME - short company name;
+        SECNAME - full company name;
+        ISIN - share identification number.
          */
     private Set<String[]> getSharesFromMarket() {
         String[][] data = new String[][]{};
@@ -39,25 +45,22 @@ public class ShareListUpdater {
                     .exchange(SHARES_INFO_REQUEST_URL,
                             HttpMethod.GET,
                             null,
-                            new ParameterizedTypeReference<SharesInfoUpdateDTO>() {
+                            new ParameterizedTypeReference<>() {
                             });
 
             SharesInfoUpdateDTO sharesInfo = responseEntity.getBody();
+            if (sharesInfo == null) {
+                throw new EmptyShareDataException("No data retrieved  for request " + SHARES_INFO_REQUEST_URL);
+            }
             SharesInfoUpdateDTO.Info info = sharesInfo.getInfo();
             data = info.getInfo();
 
         } catch (RestClientException exception) {
-            log.error("Server response error while retrieving data from market", exception);
-
+            log.error("External server response error while retrieving data from market", exception);
         } catch (NullPointerException exception) {
             log.error("No data retrieved from market server", exception);
-
         } catch (IndexOutOfBoundsException exception) {
-            log.error("Data retrieved from market server is blank", exception);
-
-        } catch (Exception exception) {
-            log.error("Error while retrieving data from market server", exception);
-
+            log.error("Data retrieved from market server, but it is blank", exception);
         }
 
         return new HashSet<>(Arrays.asList(data));
@@ -76,7 +79,7 @@ public class ShareListUpdater {
     }
 
     /*
-    Compares shares lists from database and from market.
+    Compares shares sets from database and from market.
     If they are not equal, it means that some new shares were added to market, or some shares were de-listed.
     Performs retainAll to remove de-listed shares and addAll to add new shares.
      */

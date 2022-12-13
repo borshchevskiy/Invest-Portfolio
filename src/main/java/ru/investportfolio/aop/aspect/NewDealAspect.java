@@ -1,14 +1,11 @@
 package ru.investportfolio.aop.aspect;
 
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import ru.investportfolio.database.entity.Portfolio;
 import ru.investportfolio.database.entity.User;
 import ru.investportfolio.exception.ActionNotAllowedException;
@@ -23,9 +20,11 @@ import static java.util.stream.Collectors.toSet;
 @NoArgsConstructor
 public class NewDealAspect {
 
+    private static final String ACTION_NOT_ALLOWED_MESSAGE = "This action is not allowed!";
     private PortfolioService portfolioService;
 
-    @Before(value = "execution(* ru.investportfolio.controller.DealController.newDeal(..)) && args(portfolioId, ..)", argNames = "portfolioId")
+    @Before(value = "execution(* ru.investportfolio.controller.DealController.newDeal(..)) && args(portfolioId, ..)",
+            argNames = "portfolioId")
     public void checkPortfolioOwner(Long portfolioId) {
         User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Set<Portfolio> userPortfolios = portfolioService.findAllByUser(principal);
@@ -33,14 +32,12 @@ public class NewDealAspect {
                 .map(Portfolio::getId)
                 .collect(toSet())
                 .contains(portfolioId);
+
         if (!isOwner) {
-            throw new ActionNotAllowedException("this action is not allowed");
+            throw new ActionNotAllowedException(ACTION_NOT_ALLOWED_MESSAGE);
         }
     }
 
-    public PortfolioService getPortfolioService() {
-        return portfolioService;
-    }
     @Autowired
     public void setPortfolioService(PortfolioService portfolioService) {
         this.portfolioService = portfolioService;

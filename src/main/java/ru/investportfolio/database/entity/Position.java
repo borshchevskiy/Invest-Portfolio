@@ -26,9 +26,11 @@ public class Position {
     @Column(name = "ticker")
     private String ticker;
 
+    //Average acquisition price of share
     @Column(name = "acquisition_price")
     private BigDecimal acquisitionPrice = BigDecimal.ZERO;
 
+    //Sum of acquisition values of deals
     @Column(name = "acquisition_value")
     private BigDecimal acquisitionValue = BigDecimal.ZERO;
 
@@ -39,6 +41,7 @@ public class Position {
     @Column(name = "quantity")
     private Long quantity = 0L;
 
+    //Sum of total acquisition values of deals
     @Column(name = "total_value")
     private BigDecimal totalAcquisitionValue = BigDecimal.ZERO;
 
@@ -65,11 +68,11 @@ public class Position {
     public Position() {
     }
 
-    public Position(Portfolio portfolio){
+    public Position(Portfolio portfolio) {
         this.portfolio = portfolio;
     }
 
-    public Position(Portfolio portfolio, String securityName, String ticker){
+    public Position(Portfolio portfolio, String securityName, String ticker) {
         this.portfolio = portfolio;
         this.securityName = securityName;
         this.ticker = ticker;

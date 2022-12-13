@@ -27,7 +27,6 @@ public class DealService {
 
     @Transactional
     public Optional<Deal> create(DealCreateDTO dealDTO) {
-        //Calculate total commission and acquisition value
         calculateAcquisitionValue(dealDTO);
         calculateCommissions(dealDTO);
         calculateTotalAcquisitionValue(dealDTO);
@@ -55,6 +54,13 @@ public class DealService {
         return Optional.of(deal);
     }
 
+    private void calculateAcquisitionValue(DealCreateDTO dealDTO) {
+        BigDecimal acqValue = dealDTO.getAcquisitionPrice()
+                .multiply(BigDecimal.valueOf(dealDTO.getQuantity()));
+
+        dealDTO.setAcquisitionValue(acqValue);
+    }
+
     private void calculateCommissions(DealCreateDTO dealDTO) {
         if (dealDTO.isCommission()) {
             if (dealDTO.getBrokerCommission() == null) {
@@ -74,10 +80,9 @@ public class DealService {
                 BigDecimal marketCommission = dealDTO.getAcquisitionValue()
                         .multiply(BigDecimal.valueOf(0.0001))
                         .stripTrailingZeros();
-                dealDTO.setMarketCommission(
-                        marketCommission.compareTo(MIN_MARKET_COMMISSION) < 0 ?
-                                MIN_MARKET_COMMISSION :
-                                marketCommission);
+
+                dealDTO.setMarketCommission(marketCommission.compareTo(MIN_MARKET_COMMISSION) < 0 ?
+                                MIN_MARKET_COMMISSION : marketCommission);
             } else if (dealDTO.getMarketCommission() == null) {
                 dealDTO.setMarketCommission(BigDecimal.ZERO);
             }
@@ -88,18 +93,12 @@ public class DealService {
         }
     }
 
-    private void calculateAcquisitionValue(DealCreateDTO dealDTO) {
-        BigDecimal acqValue = dealDTO.getAcquisitionPrice()
-                .multiply(BigDecimal.valueOf(dealDTO.getQuantity()));
-        dealDTO.setAcquisitionValue(acqValue);
-    }
-
     private void calculateTotalAcquisitionValue(DealCreateDTO dealDTO) {
         BigDecimal totalCommission = dealDTO.getMarketCommission()
                 .add(dealDTO.getBrokerCommission())
                 .add(dealDTO.getOtherCommission());
-        dealDTO.setTotalAcquisitionValue(dealDTO.getAcquisitionValue()
-                .add(totalCommission));
+
+        dealDTO.setTotalAcquisitionValue(dealDTO.getAcquisitionValue().add(totalCommission));
     }
 
     public CashEditDTO defineCashAmountInDeal(Deal deal) {
