@@ -1,0 +1,13 @@
+FROM eclipse-temurin:17-jdk-alpine as builder
+WORKDIR /builder
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+COPY ./src ./src
+RUN ./mvnw clean install -DskipTests=true -Dspring_profiles_active=prod
+
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /application
+EXPOSE 8080
+COPY --from=builder /builder/target/*.jar ./*.jar
+ENTRYPOINT ["java", "-jar", "*.jar" ]
