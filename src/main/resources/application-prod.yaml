@@ -20,8 +20,10 @@ spring:
       hbm2ddl.auto: validate
     open-in-view: false
 
-debug: true
+  main:
+    web-application-type: servlet
 
+debug: true
 #logging:
 #  level:
 #    root: info
