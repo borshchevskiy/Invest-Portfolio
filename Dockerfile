@@ -10,5 +10,5 @@ RUN mvn clean package -Pprod -DskipTests
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /application
 EXPOSE 8080
-COPY --from=builder /builder/target/*.jar ./*.jar
+COPY --from=builder /target/*.jar ./*.jar
 ENTRYPOINT ["java", "-jar", "*.jar" ]
