@@ -51,11 +51,11 @@ public class PriceService {
             ShareUpdateDTO.MarketData marketData = share.getMarketdata();
             currentPrice = BigDecimal.valueOf(marketData.getData()[MARKET_DATA_ARRAY_LINE][MARKET_DATA_ARRAY_COLUMN]);
         } catch (RestClientException exception) {
-            log.error("External server response error while retrieving data from market", exception);
+            log.error("External server response error for market data request: " + requestUrl, exception);
         } catch (EmptyShareDataException exception) {
-            log.error("No data retrieved from market server", exception);
+            log.error("No data retrieved from market server. " + exception.getMessage(), exception);
         } catch (IndexOutOfBoundsException exception) {
-            log.error("Data retrieved from market server, but it is blank", exception);
+            log.error("Response received from market server, but it is blank. Request: " + requestUrl, exception);
         }
 
         return currentPrice;

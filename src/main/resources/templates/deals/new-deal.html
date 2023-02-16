@@ -25,7 +25,7 @@
                        name="securityNameAndTicker"
                        th:value="${securityNameAndTicker}?: ' '" placeholder="Type to search...">
                 <datalist id="nameOptions">
-                    <th:block th:each="name:${names}" th:name="names" th:object="${names}">
+                    <th:block th:each="name:${shareNames}" th:name="shareNames" th:object="${shareNames}">
                         <option th:value="${name}">
                     </th:block>
                 </datalist>

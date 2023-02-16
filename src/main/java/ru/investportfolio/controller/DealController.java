@@ -12,27 +12,21 @@ import ru.investportfolio.controller.util.ControllerUtil;
 import ru.investportfolio.database.entity.Deal;
 import ru.investportfolio.dto.CashEditDTO;
 import ru.investportfolio.dto.DealCreateDTO;
-import ru.investportfolio.dto.ShareDatalistDTO;
 import ru.investportfolio.service.DealService;
 import ru.investportfolio.service.PortfolioService;
 import ru.investportfolio.service.PositionService;
-import ru.investportfolio.service.ShareService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Comparator.naturalOrder;
-
 @Controller
-@ControllerAdvice(basePackages = "ru.investportfolio.controller.DealController")
 @RequiredArgsConstructor
 public class DealController {
 
     private final DealService dealService;
     private final PortfolioService portfolioService;
     private final PositionService positionService;
-    private final ShareService shareService;
 
     @GetMapping("/portfolios/{id}/new-deal")
     public String newDeal(@PathVariable("id") Long portfolioId,
@@ -53,12 +47,12 @@ public class DealController {
     public String addNewDeal(@ModelAttribute @Validated DealCreateDTO dealDTO,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @ModelAttribute("names") ArrayList<String> names,
+                             @ModelAttribute("shareNames") ArrayList<String> shareNames,
                              @PathVariable("id") Long portfolioId,
                              @RequestParam(value = "hasCommission", required = false) String hasCommission) {
 
         List<String> errors = new ArrayList<>();
-        boolean contains = names.contains(dealDTO.getSecurityNameAndTicker());
+        boolean contains = shareNames.contains(dealDTO.getSecurityNameAndTicker());
 
         if (bindingResult.hasErrors() || !contains) {
             if (!contains) {
@@ -87,17 +81,5 @@ public class DealController {
         portfolioService.updateCash(portfolioId, cashEditDTO);
 
         return "redirect:/portfolios/{id}";
-    }
-
-    @ModelAttribute("names")
-    private List<String> getShareNamesAndTickers() {
-        List<String> names = new ArrayList<>(shareService.getShareDatalist()
-                .stream()
-                .map(ShareDatalistDTO::toString)
-                .toList());
-
-        names.sort(naturalOrder());
-
-        return names;
     }
 }
