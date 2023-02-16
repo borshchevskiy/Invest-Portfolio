@@ -20,8 +20,8 @@ spring:
       hbm2ddl.auto: validate
     open-in-view: false
 
-logging:
-  level:
-    root: info
-  file:
-    path: logs
+#logging:
+#  level:
+#    root: info
+#  file:
+#    path: logs
