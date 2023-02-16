@@ -1,7 +1,8 @@
 FROM eclipse-temurin:17-jdk-alpine as builder
 WORKDIR /builder
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
+COPY pom.xml .
+COPY .mvn/ .
+COPY mvnw .
 RUN ./mvnw dependency:go-offline
 COPY ./src ./src
 RUN ./mvnw clean install -DskipTests=true -Dspring_profiles_active=prod
