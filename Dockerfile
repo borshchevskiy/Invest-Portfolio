@@ -3,12 +3,11 @@
 #
 FROM maven:3.8.6-eclipse-temurin-17-alpine AS builder
 COPY . .
-RUN mvn clean package -Pprod -DskipTests
+RUN mvn clean package -DskipTests
 #
 # Package stage
 #
-FROM eclipse-temurin:17-jre-alpine
-WORKDIR /application
+FROM eclipse-temurin:17-jdk-alpine
+COPY --from=builder /target/*.jar *.jar
 EXPOSE 8080
-COPY --from=builder /target/*.jar ./*.jar
-ENTRYPOINT ["java", "-jar", "*.jar" ]
+ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-jar", "*.jar" ]

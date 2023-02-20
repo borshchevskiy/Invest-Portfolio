@@ -3,11 +3,9 @@ spring:
     format:
       date: iso
 
+
   datasource:
-    url: jdbc:postgresql://dpg-cfl4mfpa6gductitalv0-a:5432/investportfolio
-    username: investportfolio_user
-    password: 9VNStEKWY1TbxUdSqorby7MwnT6jUQ8Q
-    driver-class-name: org.postgresql.Driver
+    url: ${DATABASE_URL}
 
   liquibase:
     enabled: true
@@ -20,12 +18,8 @@ spring:
       hbm2ddl.auto: validate
     open-in-view: false
 
-  main:
-    web-application-type: servlet
-
-debug: true
-#logging:
-#  level:
-#    root: info
-#  file:
-#    path: logs
+logging:
+  level:
+    root: info
+  file:
+    path: logs
