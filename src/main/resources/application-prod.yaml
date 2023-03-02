@@ -3,9 +3,11 @@ spring:
     format:
       date: iso
 
-
   datasource:
-    url: ${DATABASE_URL}
+    url: jdbc:postgresql://dpg-cfl4mfpa6gductitalv0-a:5432/investportfolio
+    username: investportfolio_user
+    password: 9VNStEKWY1TbxUdSqorby7MwnT6jUQ8Q
+    driver-class-name: org.postgresql.Driver
 
   liquibase:
     enabled: true
