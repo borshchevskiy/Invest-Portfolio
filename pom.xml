@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
-            <version>[4.5.0,)</version>
+            <version>4.15.0</version>
         </dependency>
 
         <!--AOP-->
@@ -109,6 +109,7 @@
                     <profiles>
                         <profile>dev</profile>
                         <profile>prod</profile>
+                        <profile>docker</profile>
                     </profiles>
                     <imageName>borshchevskiy/invest-portfolio</imageName>
                     <excludes>
