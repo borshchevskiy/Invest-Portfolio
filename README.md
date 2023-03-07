@@ -23,6 +23,11 @@ To run this app without Docker you need:
 Or run app manually with IDE, in run configuration set "Active profiles" to "dev".
 3. Connect to localhost:8080.
 
+You can also get app's metrics with Prometheus and Grafana. 
+JVM and http request percentile histogram is available for Grafana .
+In "metrics" folder run "docker-compose up" to build and run Grafana and Prometheus.
+Prometheus' metrics is available at localhost:9090 and Grafana's dashboards are available at localhost:3000
+
 Liquibase is used to create all DDL in database.
 Also, a test account will be created with username 'admin@admin.com' and password 'admin'.
 Fell free to use it for test-drive or create a new one.

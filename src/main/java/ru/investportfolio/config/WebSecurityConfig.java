@@ -23,7 +23,8 @@ public class WebSecurityConfig {
                                 "/registration",
                                 "/static/**",
                                 "/public/**",
-                                "/favicon.ico").permitAll().anyRequest().authenticated()
+                                "/favicon.ico",
+                                "/actuator/**").permitAll().anyRequest().authenticated()
                 )
                 .formLogin(login -> login
                         .loginPage("/login")
