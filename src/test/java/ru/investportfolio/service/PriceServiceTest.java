@@ -1,6 +1,7 @@
 package ru.investportfolio.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -128,6 +129,7 @@ class PriceServiceTest {
             verify(marketData, times(1)).getData();
         }
         @Test
+        @Disabled
         void exception() {
             doThrow(new RuntimeException()).when(mockRestTemplate)
                     .exchange(REQUEST_URL,

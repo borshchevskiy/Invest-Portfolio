@@ -30,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor
 class PortfolioServiceTest extends IntegrationTestBase {
 
-    private static final Long ADMIN_TEST_PORTFOLIO_ID = 9L;
-    private static final Long ADMIN_TEST_PORTFOLIO_ID_2 = 10L;
+    private static final Long ADMIN_TEST_PORTFOLIO_ID = 1L;
+    private static final Long ADMIN_TEST_PORTFOLIO_ID_2 = 2L;
     private static final Integer ADMIN_TEST_PORTFOLIOS_QUANTITY = 2;
     private static final Long ADMIN_TEST_ID = 1L;
     private static final Long FAULTY_ID = Long.MAX_VALUE;

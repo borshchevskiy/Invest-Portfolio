@@ -63,6 +63,7 @@ public class DealController {
 
             return "redirect:/portfolios/{id}/new-deal";
         }
+
         if (StringUtils.hasText(hasCommission)) {
             dealDTO.setCommission(true);
         }

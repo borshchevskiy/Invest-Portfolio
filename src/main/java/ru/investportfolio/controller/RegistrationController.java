@@ -33,18 +33,17 @@ public class RegistrationController {
     public String register(@ModelAttribute @Validated UserCreateDTO user,
                            BindingResult bindingResult,
                            RedirectAttributes redirectAttributes,
-                           @RequestParam("passwordConfirm") String passwordConfirm) {
+                           @RequestParam(value = "passwordConfirm", required = false) String passwordConfirm) {
 
-        boolean isConfirmationEmpty = !StringUtils.hasText(passwordConfirm);
         List<String> errors = new ArrayList<>();
 
-        if (isConfirmationEmpty) {
+        if (!StringUtils.hasText(passwordConfirm)) {
             errors.add("Password confirmation can't be empty!");
         }
         if (user.getPassword() != null && !user.getPassword().equals(passwordConfirm)) {
             errors.add("Passwords are different!");
         }
-        if (isConfirmationEmpty || bindingResult.hasErrors()) {
+        if (!errors.isEmpty() || bindingResult.hasErrors()) {
             errors.addAll(ControllerUtil.gerErrorsMessages(bindingResult));
             redirectAttributes.addFlashAttribute("user", user);
             redirectAttributes.addFlashAttribute("errors", errors);

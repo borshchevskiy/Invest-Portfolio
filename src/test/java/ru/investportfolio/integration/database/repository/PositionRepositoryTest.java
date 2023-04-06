@@ -22,7 +22,7 @@ class PositionRepositoryTest extends IntegrationTestBase {
 
     @BeforeAll
     static void prepare() {
-        TEST_PORTFOLIO.setId(9L);
+        TEST_PORTFOLIO.setId(1L);
     }
 
     @Test
