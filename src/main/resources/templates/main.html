@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Invest Portfolio</title>
     <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
@@ -10,26 +9,26 @@
 <body>
 <div class="main-page-container">
     <header class="navbar-header">
-        <div th:insert="~{fragments/fragment-navbar-main :: navbar}"></div>
+        <div th:insert="~{fragments/fragment-navbar :: navbar}"></div>
     </header>
     <div class="content">
-        <h1>Control and accounting of your investments</h1>
+        <h1><span th:text="#{main.tagline}">Control and accounting of your investments</span></h1>
         <ul>
-            <li>Add stock trades</li>
-            <li>Monitor your portfolio</li>
-            <li>Analyze revenue</li>
+            <li><span th:text="#{main.list1.1}">Add stock trades</span></li>
+            <li><span th:text="#{main.list1.2}">Monitor your portfolio</span></li>
+            <li><span th:text="#{main.list1.3}">Analyze revenue</span></li>
         </ul>
 
         <form class="start-button" th:action="@{/portfolios}">
-            <button type="submit" class="btn btn-light btn-lg">Start now!</button>
+            <button type="submit" class="btn btn-light btn-lg"><span th:text="#{main.start}">Start now!</span></button>
         </form>
 
     </div>
     <div class="image">
         <img class="main-page-image" src="/static/images/background/main-page-img.png" alt="">
         <div class="image-text">
-            Image:
-            <a class="link-text-white" href="https://www.freepik.com">Designed by zaie / Freepik</a>
+            <span  th:text="#{main.image}">Image:</span>
+            <a class="link-text-white" href="https://www.freepik.com"><span  th:text="#{main.designed}">Designed by</span> zaie / Freepik</a>
         </div>
     </div>
 </div>

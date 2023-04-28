@@ -1,68 +1,67 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Registration</title>
+    <title th:text="#{registration.title}">Registration</title>
     <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
     <link rel="stylesheet" type="text/css" href="/static/css/registration.css"/>
 </head>
 <body>
 <div class="page-container">
     <header class="navbar-header">
-        <div th:insert="~{fragments/fragment-navbar-login :: navbar-empty}"></div>
+        <div th:insert="~{fragments/fragment-navbar :: navbar}"></div>
     </header>
     <div class="content">
-        <h1 class="mb-3">Registration</h1>
-        <h5 class="mb-2">Fields marked with * are mandatory.</h5>
+        <h1 class="mb-3"><span th:text="#{registration.header}">Registration</span></h1>
+        <h5 class="mb-2"><span th:text="#{registration.note}">Fields marked with * are mandatory.</span></h5>
         <form th:action="@{/registration}" method="post" th:object="${user}">
             <div class="mb-3">
-                <label class="form-label" for="email">*Email:
+                <label class="form-label" for="email"><span th:text="#{registration.email}">*Email:</span>
                     <div>
                         <input class="form-control-lg" id="email" type="email" name="email" placeholder="example@example.com" th:value="*{email}" required/>
                     </div>
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="password">*Password:
+                <label class="form-label" for="password"><span th:text="#{registration.password}">*Password:</span>
                     <div>
                         <input class="form-control-lg" id="password" type="password" name="password" placeholder="********" required/>
                     </div>
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="passwordConfirm">*Confirm password:
+                <label class="form-label" for="passwordConfirm"><span th:text="#{registration.passwordconfirm}">*Confirm password:</span>
                     <div>
                         <input class="form-control-lg" id="passwordConfirm" type="password" name="passwordConfirm" placeholder="********" required/>
                     </div>
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="firstname">Firstname
+                <label class="form-label" for="firstname"><span th:text="#{registration.firstname}">Firstname:</span>
                     <div>
                         <input class="form-control-lg" id="firstName" type="text" name="firstname" placeholder="Ivan" th:value="*{firstname}">
                     </div>
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="lastName">Lastname
+                <label class="form-label" for="lastName"><span th:text="#{registration.lastname}">Lastname:</span>
                     <div>
                         <input class="form-control-lg" id="lastName" type="text" name="lastname" placeholder="Ivanov" th:value="*{lastname}">
                     </div>
                 </label>
             </div>
-            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-4" type="submit">Register</button>
+<!--            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-4" type="submit"><span th:text="#{registration.button.register}">Register</span></button>-->
+            <button class="btn btn-primary btn-lg btn-custom d-grid col-12 mb-4" type="submit"><span th:text="#{registration.button.register}">Register</span></button>
         </form>
         <div th:if="${errors}">
-            <p th:each="error : ${errors}" th:text="${error}">Error message</p>
+            <p th:each="error : ${errors}" th:text="${error}"><span th:text="#{registration.error}">Error message</span></p>
         </div>
         <div class="mb-2">
-            <p>Already registered? <a th:href="@{/login}">Login!</a></p>
+            <p><span th:text="#{registration.already}">Already registered? </span> <a th:href="@{/login}"><span th:text="#{registration.loginref}">Login!</span></a></p>
         </div>
         <div class="mb-2">
-            <a th:href="@{/}">Back to main page</a>
+            <a th:href="@{/}"><span th:text="#{registration.backtomain}">Back to main page</span></a>
         </div>
     </div>
 </div>
-
-
 </body>
 </html>

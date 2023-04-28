@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Portfolios</title>
+    <title th:text="#{portfolio.title}">Portfolio</title>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
     <link rel="stylesheet" type="text/css" href="/static/css/portfolios/portfolio.css"/>
@@ -10,7 +9,7 @@
 <body>
 <div class="page-container">
     <header class="navbar-header">
-        <div th:insert="~{fragments/fragment-navbar-portfolio :: navbar}"></div>
+        <div th:insert="~{fragments/fragment-navbar :: navbar}"></div>
     </header>
     <div class="content">
         <!--Portfolio deleted alert-->
@@ -20,15 +19,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
-        <h1 class="mb-3">Portfolio:</h1>
+        <h1 class="mb-3"><span th:text="#{portfolio.header.portfolio}">Portfolio:</span></h1>
         <table class="table table-bordered table-hover mb-3">
             <thead>
             <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Total Value</th>
-                <th scope="col">Positions value</th>
-                <th scope="col">Cash</th>
-                <th scope="col">Profit/Loss</th>
+                <th scope="col" th:text="#{portfolio.table.portfolio.col.name}">Name</th>
+                <th scope="col" th:text="#{portfolio.table.portfolio.col.totalvalue}">Total Value</th>
+                <th scope="col" th:text="#{portfolio.table.portfolio.col.positionvalue}">Positions value</th>
+                <th scope="col" th:text="#{portfolio.table.portfolio.col.cash}">Cash</th>
+                <th scope="col" th:text="#{portfolio.table.portfolio.col.profitloss}">Profit/Loss</th>
                 <th scope="col">%</th>
             </tr>
             </thead>
@@ -45,11 +44,11 @@
             </tbody>
         </table>
         <div class="mb-3" th:if="${portfolio.user.id == userId}">
-            <a th:href="@{{id}/new-deal(id=${portfolio.id})}" class="btn btn-primary btn-lg btn-custom">New deal</a>
+            <a th:href="@{{id}/new-deal(id=${portfolio.id})}" class="btn btn-primary btn-lg btn-custom"><span th:text="#{portfolio.button.newdeal}">New deal</span></a>
             <!-- Button triggers modal for add/remove cash-->
             <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
                     data-bs-target="#addOrRemoveCashModal">
-                Add/Remove cash
+                <span th:text="#{portfolio.button.changecash}">Add/Remove cash</span>
             </button>
             <!-- Modal for add/remove cash-->
             <div class="modal fade" id="addOrRemoveCashModal" data-bs-backdrop="static" data-bs-keyboard="true"
@@ -59,23 +58,27 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addOrRemoveCashLabel">Add/Remove cash</h5>
+                            <h5 class="modal-title" id="addOrRemoveCashLabel">
+                                <span th:text="#{portfolio.button.label.changecash}">Add/Remove cash</span></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form th:action="@{{id}/cash(id=${portfolio.id})}" method="post">
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="cash" class="col-form-label">Cash amount:</label>
+                                    <label for="cash" class="col-form-label">
+                                        <span th:text="#{portfolio.cashamount}">Cash amount:</span></label>
                                     <input type="number" step="any" class="form-control" id="cash" name="cash">
                                 </div>
                                 <div th:if="${cashErrors}">
-                                    <p th:each="error : ${cashErrors}" th:text="${error}">Error message</p>
+                                    <p th:each="error : ${cashErrors}" th:text="${error}">
+                                        <span th:text="#{portfolio.error}">Error message</span></p>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-success" name="cashAction" value="add">Add</button>
-                                <button type="submit" class="btn btn-danger" name="cashAction" value="remove">Remove
-                                </button>
+                                <button type="submit" class="btn btn-success" name="cashAction" value="add">
+                                    <span th:text="#{portfolio.button.addcash}">Add</span></button>
+                                <button type="submit" class="btn btn-danger" name="cashAction" value="remove">
+                                    <span th:text="#{portfolio.button.removecash}">Remove</span></button>
                             </div>
                         </form>
                     </div>
@@ -84,7 +87,7 @@
             <!-- Button triggers modal for update-->
             <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
                     data-bs-target="#updatePortfolioModal">
-                Change portfolio name
+                <span th:text="#{portfolio.button.changename}">Change portfolio name</span>
             </button>
             <!-- Modal for Update-->
             <div class="modal fade" id="updatePortfolioModal" data-bs-backdrop="static" data-bs-keyboard="true"
@@ -94,13 +97,15 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="updatePortfolioLabel">Change portfolio name</h5>
+                            <h5 class="modal-title" id="updatePortfolioLabel">
+                                <span th:text="#{portfolio.button.label.changename}">Change portfolio name</span></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form th:action="@{/portfolios/{id}/update(id=${portfolio.id})}" method="post">
                             <div class="modal-body">
                                 <div class="mb-3">
-                                    <label for="portfolio-name" class="col-form-label">New portfolio name:</label>
+                                    <label for="portfolio-name" class="col-form-label">
+                                        <span th:text="#{portfolio.label.newname}">New portfolio name:</span></label>
                                     <input type="text" class="form-control" id="portfolio-name" name="name">
                                 </div>
                                 <div th:if="${updateErrors}">
@@ -108,8 +113,10 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Update</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span th:text="#{portfolio.button.update}">Update</span></button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <span th:text="#{portfolio.button.close}">Close</span></button>
                             </div>
                         </form>
                     </div>
@@ -118,7 +125,7 @@
             <!-- Button triggers modal for delete-->
             <button type="button" class="btn btn-primary btn-lg btn-custom" data-bs-toggle="modal"
                     data-bs-target="#deletePortfolioModal">
-                Delete portfolio
+                <span th:text="#{portfolio.button.delete}">Delete portfolio</span>
             </button>
             <!-- Modal for delete-->
             <div class="modal fade" id="deletePortfolioModal" data-bs-backdrop="static" data-bs-keyboard="true"
@@ -128,7 +135,8 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="deletePortfolioLabel">Delete portfolio</h5>
+                            <h5 class="modal-title" id="deletePortfolioLabel">
+                                <span th:text="#{portfolio.button.label.delete}">Delete portfolio</span></h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <form th:action="@{/portfolios/{id}/delete(id=${portfolio.id})}" method="post">
@@ -136,13 +144,14 @@
                                 <div class="mb-3">
                                     <input type="hidden" name="name" th:value="${portfolio.name}"/>
                                     <p th:text="'Are you sure want to delete portfolio ' + ${portfolio.name} + '?'">
-                                        Warning
-                                        text</p>
+                                        <span th:text="#{portfolio.warningtext}">Warning text</span></p>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Delete</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">
+                                    <span th:text="#{portfolio.button.delete.submit}">Delete</span></button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                    <span th:text="#{portfolio.button.delete.close}">Close</span></button>
                             </div>
                         </form>
                     </div>
@@ -150,21 +159,21 @@
             </div>
             <br>
         </div>
-        <h2>Positions:</h2>
+        <h2><span th:text="#{portfolio.header.positions}">Positions:</span></h2>
         <table class="table table-bordered table-hover mb-3">
             <thead>
             <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Ticker</th>
-                <th scope="col">Position</th>
-                <th scope="col">Acquisition price</th>
-                <th scope="col">Current Price</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Acquisition value</th>
-                <th scope="col">Liquidation Value</th>
-                <th scope="col">Profit/Loss</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.name}">Name</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.ticker}">Ticker</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.position}">Position</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.acquisitionprice}">Acquisition price</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.currentprice}">Current Price</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.quantity}">Quantity</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.acquisitionvalue}">Acquisition value</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.liquidationprice}">Liquidation Value</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.profitloss}">Profit/Loss</th>
                 <th scope="col">%</th>
-                <th scope="col">Action</th>
+                <th scope="col" th:text="#{portfolio.table.positions.col.action}">Action</th>
             </tr>
             </thead>
             <tbody class="align-middle">
@@ -186,7 +195,8 @@
                         <input type="hidden" name="securityName" th:value="${position.securityName}">
                         <input type="hidden" name="dealType" th:value="'buy'">
                         <button type="submit" class="btn btn-success btn-sm"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Buy more">Buy
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Buy more">
+                            <span th:text="#{portfolio.position.button.buy}">Buy</span>
                         </button>
                     </form>
                     <form class="col m-0" th:action="@{{id}/new-deal(id=${portfolio.id})}" method="get">
@@ -194,14 +204,16 @@
                         <input type="hidden" name="securityName" th:value="${position.securityName}">
                         <input type="hidden" name="dealType" th:value="'sell'">
                         <button type="submit" class="btn btn-danger btn-sm"
-                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sell">Sell
+                                data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Sell">
+                            <span th:text="#{portfolio.position.button.sell}">Sell</span>
                         </button>
                     </form>
                     <form class="col m-0" th:action="@{{id}/delete-position(id=${portfolio.id})}" method="post">
                         <button type="submit" class="btn btn-secondary btn-sm" name="positionId"
                                 data-bs-toggle="tooltip" data-bs-placement="top"
                                 data-bs-title="Remove position (This action does not sell stocks)"
-                                th:value="${position.id}">Delete
+                                th:value="${position.id}">
+                            <span th:text="#{portfolio.button.deleteposition}">Delete</span>
                         </button>
                     </form>
                 </td>

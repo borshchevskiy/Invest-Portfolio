@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Profile</title>
+    <title th:text="#{profile.title}">Profile</title>
     <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
     <link rel="stylesheet" type="text/css" href="/css/user/profile/profile.css"/>
 </head>
 <body>
 <div class="page-container" th:object="${user}">
     <header class="navbar-header">
-        <div th:insert="~{fragments/fragment-navbar-profile :: navbar}"></div>
+        <div th:insert="~{fragments/fragment-navbar :: navbar}"></div>
     </header>
     <div class="content">
-        <p class="mb-3" th:text="'Email: ' + *{email}">Email</p>
-        <p class="mb-3" th:text="'Firstname: ' + *{firstname}">Firstname</p>
-        <p class="mb-3" th:text="'Lastname: ' + *{lastname}">Lastname</p>
-        <div class="mb-3"><a th:href="@{/profile/update}">Update profile</a></div>
-        <div class="mb-3"><a th:href="@{/profile/update/password}">Change Password</a></div>
+        <h1 class="mb-3"><span th:text="#{profile.header}">Profile</span></h1>
+        <p class="mb-3" th:text="#{profile.email} + ': ' + *{email}">Email</p>
+        <p class="mb-3" th:text="#{profile.firstname} + ': ' + *{firstname}">Firstname</p>
+        <p class="mb-3" th:text="#{profile.lastname} + ': ' + *{lastname}">Lastname</p>
+        <div class="mb-3"><a th:href="@{/profile/update}"><span th:text="#{profile.updateprofile}">Update profile</span></a></div>
+        <div class="mb-3"><a th:href="@{/profile/update/password}"><span th:text="#{profile.changepassword}">Change Password</span></a></div>
     </div>
 </div>
 </body>

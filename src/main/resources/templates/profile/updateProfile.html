@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Update Profile</title>
+    <title th:text="#{profile.update.profile.title}">Update Profile</title>
     <th:block th:insert="~{fragments/fragment-assets :: common-assets}"></th:block>
     <link rel="stylesheet" type="text/css" href="/css/user/profile/profile.css"/>
 </head>
 <body>
 <div class="page-container">
     <header class="navbar-header">
-        <div th:insert="~{fragments/fragment-navbar-profile :: navbar}"></div>
+        <div th:insert="~{fragments/fragment-navbar :: navbar}"></div>
     </header>
     <div class="content">
-        <h1 class="mb-3">Update profile</h1>
-        <h5 class="mb-3">Fields marked with * can not be blank.</h5>
+        <h1 class="mb-3"><span th:text="#{profile.update.profile.header}">Update profile</span></h1>
+        <h5 class="mb-3"><span th:text="#{profile.update.profile.note}">Fields marked with * can not be blank.</span></h5>
         <form th:action="@{/profile/update}" method="post" th:object="${user}">
             <div class="mb-3">
-                <label class="form-label" for="email">*Email:
+                <label class="form-label" for="email"><span th:text="#{profile.update.profile.email}">*Email:</span>
                     <div>
                         <input class="form-control" id="email" type="email" name="email"
                                placeholder="example@example.com" th:value="*{email}"/>
@@ -23,7 +23,7 @@
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="firstname">Firstname
+                <label class="form-label" for="firstname"><span th:text="#{profile.update.profile.firstname}">Firstname</span>
                     <div>
                         <input class="form-control" id="firstName" type="text" name="firstname" placeholder="Firstname"
                                th:value="*{firstname}">
@@ -31,20 +31,21 @@
                 </label>
             </div>
             <div class="mb-3">
-                <label class="form-label" for="lastName">Lastname
+                <label class="form-label" for="lastName"><span th:text="#{profile.update.profile.lastname}">Lastname</span>
                     <div>
                         <input class="form-control" id="lastName" type="text" name="lastname" placeholder="Lastname"
                                th:value="*{lastname}">
                     </div>
                 </label>
             </div>
-            <button class="btn btn-primary btn-lg btn-custom d-grid col-6 mx-auto mb-4" type="submit">Update</button>
+            <button class="btn btn-primary btn-lg btn-custom d-grid col-8 mx-auto mb-4" type="submit">
+                <span th:text="#{profile.update.profile.button.update}">Update</span></button>
         </form>
         <div class="mb-3" th:if="${errors}">
-            <p th:each="error : ${errors}" th:text="${error}">Error message</p>
+            <p th:each="error : ${errors}" th:text="${error}"><span th:text="#{profile.update.profile.error}">Error message</span></p>
         </div>
         <div>
-            <a th:href="@{/profile}">Back to profile</a>
+            <a th:href="@{/profile}"><span th:text="#{profile.update.profile.backtoprofile}">Back to profile</span></a>
         </div>
     </div>
 </div>
