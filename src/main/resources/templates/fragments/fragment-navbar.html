@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--Navbar profile page-->
+<div th:fragment="navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="font-size: 1.5rem">
+        <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">
+                <img src="/static/images/navbar/logo.png" alt="" height=80px width=80px/>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <th:block sec:authorize="isAuthenticated()">
+                    <ul class="navbar-nav me-auto my-auto ms-3">
+                        <li class="nav-item me-3">
+                            <a id="profileLink" class="nav-link" th:href="@{/profile}"><span
+                                    th:text="#{navbar.profile}">Profile</span></a>
+                        </li>
+                        <li class="nav-item me-3">
+                            <a id="portfoliosLink" class="nav-link" th:href="@{/portfolios}"><span
+                                    th:text="#{navbar.portfolios}">Portfolios</span></a>
+                        </li>
+                    </ul>
+                </th:block>
+
+                <form class="d-flex pe-3">
+                    <label for="lang"><span class="navbar-text pe-3"
+                                            th:text="#{navbar.language}">Language:</span></label>
+                    <select class="form-control" id="lang" name="lang" required onchange="this.form.submit()">
+                        <option value="en">EN</option>
+                        <option value="ru">RU</option>
+                    </select>
+                </form>
+
+                <th:block sec:authorize="isAuthenticated()">
+                    <form class="d-flex my-auto ms-3 me-5" method="post" th:action="@{/logout}">
+                        <button class="link-button nav-link" type="submit"><span
+                                th:text="#{navbar.logout}">Logout</span></button>
+                    </form>
+                </th:block>
+
+                <th:block sec:authorize="!isAuthenticated()">
+                    <div class="navbar-nav me-auto"></div>
+                    <form class="d-flex pe-3">
+                        <a class="link-button nav-link" th:href="@{/login}"><span
+                                th:text="#{navbar.login}">Login</span></a>
+                    </form>
+
+                    <span class="navbar-text pe-3" th:text="#{navbar.or}"> or </span>
+
+                    <form class="d-flex">
+                        <a class="link-button nav-link" th:href="@{/registration}"><span
+                                th:text="#{navbar.register}">Register</span></a>
+                    </form>
+                </th:block>
+            </div>
+        </div>
+    </nav>
+    <script>
+        var path = window.location.pathname;
+        var myClass;
+        if (path.startsWith("/profile")) {
+            myClass = document.getElementById("profileLink");
+            myClass.setAttribute("class", "nav-link active");
+        } else if (path.startsWith("/portfolio")) {
+            myClass = document.getElementById("portfoliosLink");
+            myClass.setAttribute("class", "nav-link active");
+        }
+    </script>
+    <script>
+        var lang = getCookie("lang");
+        function getCookie(cname) {
+            let name = cname + "=";
+            let decodedCookie = decodeURIComponent(document.cookie);
+            let ca = decodedCookie.split(';');
+            for (let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        if (lang === "") {
+            document.getElementById("lang").value = "en";
+        } else {
+            document.getElementById("lang").value = lang;
+        }
+    </script>
+</div>
+
+</body>
+</html>
