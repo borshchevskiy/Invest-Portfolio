@@ -16,14 +16,14 @@ import java.time.LocalDate;
 @Setter
 public class DealCreateDTO {
 
-    @NotBlank(message = "Security name can't be empty")
+    @NotBlank(message = "{deal-create-dto.security-name-and-ticker.blank}")
     private String securityNameAndTicker;
 
-    @NotNull(message = "Acquisition price can't be empty")
+    @NotNull(message = "{deal-create-dto.acquisition-price.null}")
     @Positive
     private BigDecimal acquisitionPrice;
 
-    @NotNull(message = "Quantity can't be empty")
+    @NotNull(message = "{deal-create-dto.quantity.null}")
     @Positive
     private Long quantity;
 

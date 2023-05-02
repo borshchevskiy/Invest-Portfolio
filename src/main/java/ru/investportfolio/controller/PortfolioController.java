@@ -1,6 +1,7 @@
 package ru.investportfolio.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +17,7 @@ import ru.investportfolio.dto.CashEditDTO;
 import ru.investportfolio.service.PortfolioService;
 import ru.investportfolio.service.PositionService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Set;
 
 @Controller
@@ -25,6 +27,7 @@ public class PortfolioController {
 
     private final PortfolioService portfolioService;
     private final PositionService positionService;
+    private final MessageSource messageSource;
 
     @GetMapping
     public String getUserPortfolios(@AuthenticationPrincipal User user, Model model) {
@@ -54,10 +57,14 @@ public class PortfolioController {
     public String createPortfolio(@RequestParam("name") String name,
                                   @ModelAttribute @Validated CashEditDTO cash,
                                   BindingResult bindingResult,
-                                  RedirectAttributes redirectAttributes) {
+                                  RedirectAttributes redirectAttributes,
+                                  HttpServletRequest request) {
 
         if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("createErrors", "Name can't be empty");
+            redirectAttributes.addFlashAttribute("createErrors",
+                    messageSource.getMessage("controller.portfolio.create.name.empty",
+                            null,
+                            ControllerUtil.getLocaleFromCookie(request)));
             return "redirect:/portfolios";
         }
 
@@ -76,10 +83,14 @@ public class PortfolioController {
     @PostMapping("/{id}/update")
     public String updatePortfolio(@PathVariable Long id,
                                   @RequestParam("name") String name,
-                                  RedirectAttributes redirectAttributes) {
+                                  RedirectAttributes redirectAttributes,
+                                  HttpServletRequest request) {
 
         if (!StringUtils.hasText(name)) {
-            redirectAttributes.addFlashAttribute("updateErrors", "Name can't be empty");
+            redirectAttributes.addFlashAttribute("updateErrors",
+                    messageSource.getMessage("controller.portfolio.update.name.empty",
+                            null,
+                            ControllerUtil.getLocaleFromCookie(request)));
             return "redirect:/portfolios/{id}";
         }
 
@@ -108,7 +119,8 @@ public class PortfolioController {
     public String changeCash(@ModelAttribute @Validated CashEditDTO cash,
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes,
-                             @PathVariable Long id) {
+                             @PathVariable Long id,
+                             HttpServletRequest request) {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("cashErrors", ControllerUtil.gerErrorsMessages(bindingResult));
@@ -119,7 +131,9 @@ public class PortfolioController {
 
         if (!isUpdated) {
             redirectAttributes.addFlashAttribute("cashErrors",
-                    "Cash balance can't become negative!");
+                    messageSource.getMessage("controller.portfolio.update.cash.negative",
+                            null,
+                            ControllerUtil.getLocaleFromCookie(request)));
         }
         return "redirect:/portfolios/{id}";
     }

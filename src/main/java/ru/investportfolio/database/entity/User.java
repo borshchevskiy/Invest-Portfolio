@@ -23,12 +23,12 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
-    @Email(message = "Email is not correct!")
-    @NotBlank(message = "Email can't be empty!")
+    @Email(message = "{user.email.not-correct}")
+    @NotBlank(message = "{user.email.blank}")
     @Column(name = "username")
     private String email;
 
-    @NotBlank(message = "Password can't be empty!")
+    @NotBlank(message = "{user.password.empty}")
     @Column(name = "password")
     private String password;
 

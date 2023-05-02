@@ -32,6 +32,7 @@
                     </ul>
                 </th:block>
 
+                <div class="navbar-nav me-auto"></div>
                 <form class="d-flex pe-3">
                     <label for="lang"><span class="navbar-text pe-3"
                                             th:text="#{navbar.language}">Language:</span></label>
@@ -49,7 +50,7 @@
                 </th:block>
 
                 <th:block sec:authorize="!isAuthenticated()">
-                    <div class="navbar-nav me-auto"></div>
+<!--                    <div class="navbar-nav me-auto"></div>-->
                     <form class="d-flex pe-3">
                         <a class="link-button nav-link" th:href="@{/login}"><span
                                 th:text="#{navbar.login}">Login</span></a>
