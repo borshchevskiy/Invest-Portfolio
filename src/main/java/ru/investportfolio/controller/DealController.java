@@ -1,6 +1,7 @@
 package ru.investportfolio.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,7 @@ import ru.investportfolio.service.DealService;
 import ru.investportfolio.service.PortfolioService;
 import ru.investportfolio.service.PositionService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +29,7 @@ public class DealController {
     private final DealService dealService;
     private final PortfolioService portfolioService;
     private final PositionService positionService;
+    private final MessageSource messageSource;
 
     @GetMapping("/portfolios/{id}/new-deal")
     public String newDeal(@PathVariable("id") Long portfolioId,
@@ -49,14 +52,17 @@ public class DealController {
                              RedirectAttributes redirectAttributes,
                              @ModelAttribute("shareNames") ArrayList<String> shareNames,
                              @PathVariable("id") Long portfolioId,
-                             @RequestParam(value = "hasCommission", required = false) String hasCommission) {
+                             @RequestParam(value = "hasCommission", required = false) String hasCommission,
+                             HttpServletRequest request) {
 
         List<String> errors = new ArrayList<>();
         boolean contains = shareNames.contains(dealDTO.getSecurityNameAndTicker());
 
         if (bindingResult.hasErrors() || !contains) {
             if (!contains) {
-                errors.add("Can't find security with specified name. Please, choose from suggested list!");
+                errors.add(messageSource.getMessage("controller.deal.add.security.not-found",
+                        null,
+                        ControllerUtil.getLocaleFromCookie(request)));
             }
             errors.addAll(ControllerUtil.gerErrorsMessages(bindingResult));
             redirectAttributes.addFlashAttribute("errors", errors);
@@ -71,7 +77,9 @@ public class DealController {
         Optional<Deal> optionalDeal = dealService.create(dealDTO);
 
         if (optionalDeal.isEmpty()) {
-            errors.add("Can't create this deal. Please check if you have sufficient money in portfolio");
+            errors.add(messageSource.getMessage("controller.deal.add.cash.insufficient",
+                    null,
+                    ControllerUtil.getLocaleFromCookie(request)));
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:/portfolios/{id}/new-deal";
         }

@@ -2,6 +2,7 @@ package ru.investportfolio.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.MessageSource;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import ru.investportfolio.database.entity.User;
 import ru.investportfolio.dto.UserEditDTO;
 import ru.investportfolio.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final MessageSource messageSource;
 
     @GetMapping()
     public String profile(@AuthenticationPrincipal User user, Model model) {
@@ -64,20 +67,25 @@ public class UserController {
     public String updatePassword(@AuthenticationPrincipal User user,
                                  @RequestParam("password") String password,
                                  @RequestParam("passwordConfirm") String passwordConfirm,
-                                 RedirectAttributes redirectAttributes) {
+                                 RedirectAttributes redirectAttributes,
+                                 HttpServletRequest request) {
 
         List<String> errors = new ArrayList<>();
         boolean isPasswordEmpty = !StringUtils.hasText(password);
         boolean isConfirmationEmpty = !StringUtils.hasText(passwordConfirm);
 
         if (isPasswordEmpty || isConfirmationEmpty) {
-            errors.add("Both Password and Confirmation should be filled!");
+            errors.add(messageSource.getMessage("controller.user.update.password.empty",
+                    null,
+                    ControllerUtil.getLocaleFromCookie(request)));
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:/profile/update/password";
         }
 
         if (!password.equals(passwordConfirm)) {
-            errors.add("Password and Confirmation must match!");
+            errors.add(messageSource.getMessage("controller.user.update.password.mismatch",
+                    null,
+                    ControllerUtil.getLocaleFromCookie(request)));
             redirectAttributes.addFlashAttribute("errors", errors);
             return "redirect:/profile/update/password";
         }

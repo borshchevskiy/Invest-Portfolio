@@ -10,8 +10,8 @@ import javax.validation.constraints.NotBlank;
 @Setter
 public class UserEditDTO {
 
-    @Email(message = "Email is not correct!")
-    @NotBlank(message = "Email can't be empty!")
+    @Email(message = "{user-edit-dto.email.email}")
+    @NotBlank(message = "{user-edit-dto.email.blank}")
     private String email;
 
     private String firstname;

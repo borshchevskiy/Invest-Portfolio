@@ -12,11 +12,11 @@ import java.util.Set;
 @Setter
 public class UserCreateDTO {
 
-    @Email(message = "Email is not correct!")
-    @NotBlank(message = "Email can't be empty!")
+    @Email(message = "{user-create-dto.email.email}")
+    @NotBlank(message = "{user-create-dto.email.blank}")
     private String email;
 
-    @NotBlank(message = "Password can't be empty!")
+    @NotBlank(message = "{user-create-dto.password.blank}")
     private String password;
 
     private String firstname;

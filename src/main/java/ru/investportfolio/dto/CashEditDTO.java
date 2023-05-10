@@ -13,11 +13,11 @@ import java.math.BigDecimal;
 @Getter
 public class CashEditDTO {
 
-    @NotNull(message = "Field can't be blank.")
-    @Positive(message = "Can not add negative amount.\r\n Use \"Remove cash\" function to decrease cash amount in portfolio.")
-    @DecimalMax(value = "99999999999999", message = "Cash amount is too big.")
+    @NotNull(message = "{cash-edit-dto.cash.null}")
+    @Positive(message = "{cash-edit-dto.cash.positive}")
+    @DecimalMax(value = "99999999999999", message = "{cash-edit-dto.cash.max}")
     private BigDecimal cash;
 
-    @NotNull(message = "Cash action error. Try again!")
+    @NotNull(message = "{cash-edit-dto.cash-action.null}")
     private CashAction cashAction;
 }
